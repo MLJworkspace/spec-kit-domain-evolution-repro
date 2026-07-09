@@ -1,0 +1,117 @@
+{
+  "source_spec": "specs/002-delivery-requests/spec.md",
+  "entities": [
+    {
+      "name": "Customer",
+      "description": "The existing domain actor previously modeled as the person or account that creates **Order** instances. In this feature, \"client\" requests are represented using **Customer**.",
+      "attributes": [],
+      "sources": [
+        "Key Entities",
+        "FR-001",
+        "FR-004",
+        "FR-005"
+      ]
+    },
+    {
+      "name": "Delivery Request",
+      "description": "A customer's request to deliver an existing **Order** to a `destination_address` on a `requested_delivery_date`; includes a review `status`.",
+      "attributes": [
+        "destination_address",
+        "requested_delivery_date",
+        "status"
+      ],
+      "sources": [
+        "Key Entities",
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006",
+        "FR-007",
+        "FR-008",
+        "FR-009",
+        "FR-010",
+        "FR-011",
+        "FR-012",
+        "FR-013",
+        "FR-014"
+      ]
+    },
+    {
+      "name": "Fulfillment Coordinator",
+      "description": "A fulfillment operations actor who reviews submitted **Delivery Request** instances and determines whether each request is approved or rejected.",
+      "attributes": [],
+      "sources": [
+        "Key Entities",
+        "FR-010",
+        "FR-011",
+        "FR-012"
+      ]
+    },
+    {
+      "name": "Order",
+      "description": "The existing customer purchase request that can be associated with zero or one **Delivery Request**.",
+      "attributes": [],
+      "sources": [
+        "Key Entities",
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-014"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "source_entity": "Customer",
+      "verb": "submit",
+      "target_entity": "Delivery Request",
+      "cardinality": "0..*",
+      "sources": [
+        "FR-005"
+      ]
+    },
+    {
+      "source_entity": "Delivery Request",
+      "verb": "be reviewed by",
+      "target_entity": "Fulfillment Coordinator",
+      "cardinality": "1",
+      "sources": [
+        "FR-012"
+      ]
+    },
+    {
+      "source_entity": "Delivery Request",
+      "verb": "belong to",
+      "target_entity": "Order",
+      "cardinality": "1",
+      "sources": [
+        "FR-002",
+        "FR-005"
+      ]
+    },
+    {
+      "source_entity": "Fulfillment Coordinator",
+      "verb": "review",
+      "target_entity": "Delivery Request",
+      "cardinality": "0..*",
+      "sources": [
+        "FR-010"
+      ]
+    },
+    {
+      "source_entity": "Order",
+      "verb": "be associated with",
+      "target_entity": "Delivery Request",
+      "cardinality": "0..1",
+      "sources": [
+        "FR-003",
+        "FR-014"
+      ]
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,111 @@
+{
+  "source_spec": "specs/002-delivery-requests/spec.md",
+  "input_domain_model": "specs/001-order-management/feature-domain.json",
+  "summary": "The new delivery request feature reuses the existing Customer and Order concepts while adding Delivery Request and Fulfillment Coordinator to extend order management.",
+  "entity_decisions": [
+    {
+      "decision": "reused_with_modification",
+      "existing_name": "Customer",
+      "generated_name": "Customer",
+      "prompt_term": "clients",
+      "reason": "The prior model uses Customer for the party that creates orders, matching the prompt's client role.",
+      "evidence": "Prompt: \"clients can request delivery\"; prior model: \"Customer ... creates **Order** instances\""
+    },
+    {
+      "decision": "reused",
+      "existing_name": "Order",
+      "generated_name": "Order",
+      "prompt_term": "order",
+      "reason": "The prompt explicitly extends existing orders with delivery requests.",
+      "evidence": "Prompt: \"existing order\"; prior model entity: \"Order\""
+    },
+    {
+      "decision": "new",
+      "existing_name": "",
+      "generated_name": "Delivery Request",
+      "prompt_term": "delivery requests",
+      "reason": "The prior model has no delivery request concept and the prompt adds it as a new order-related workflow item.",
+      "evidence": "Prompt: \"Add delivery requests\""
+    },
+    {
+      "decision": "new",
+      "existing_name": "",
+      "generated_name": "Fulfillment Coordinator",
+      "prompt_term": "fulfillment coordinators",
+      "reason": "The prior model has no fulfillment review actor and the prompt names this role explicitly.",
+      "evidence": "Prompt: \"fulfillment coordinators can review delivery requests\""
+    }
+  ],
+  "attribute_decisions": [
+    {
+      "decision": "new",
+      "entity": "Delivery Request",
+      "attribute": "destination_address",
+      "reason": "The prompt requires delivery requests to include a destination address.",
+      "evidence": "Prompt: \"delivery requests include a destination address\""
+    },
+    {
+      "decision": "new",
+      "entity": "Delivery Request",
+      "attribute": "requested_delivery_date",
+      "reason": "The prompt requires delivery requests to include a requested delivery date.",
+      "evidence": "Prompt: \"requested delivery date\""
+    },
+    {
+      "decision": "new",
+      "entity": "Delivery Request",
+      "attribute": "status",
+      "reason": "A review workflow needs a business-visible state so submitted, approved, and rejected requests can be distinguished.",
+      "evidence": "Prompt: \"fulfillment coordinators can review delivery requests\""
+    }
+  ],
+  "relationship_decisions": [
+    {
+      "decision": "new",
+      "source_entity": "Delivery Request",
+      "verb": "belong to",
+      "target_entity": "Order",
+      "cardinality": "1",
+      "reason": "Every delivery request is for one existing order.",
+      "evidence": "Prompt: \"request delivery for an existing order\""
+    },
+    {
+      "decision": "new",
+      "source_entity": "Order",
+      "verb": "be associated with",
+      "target_entity": "Delivery Request",
+      "cardinality": "0..1",
+      "reason": "The prompt limits each order to at most one delivery request.",
+      "evidence": "Prompt: \"each order can have zero or one delivery request\""
+    },
+    {
+      "decision": "new",
+      "source_entity": "Customer",
+      "verb": "submit",
+      "target_entity": "Delivery Request",
+      "cardinality": "0..*",
+      "reason": "Customers may request delivery across multiple orders over time.",
+      "evidence": "Prompt: \"clients can request delivery\""
+    },
+    {
+      "decision": "new",
+      "source_entity": "Fulfillment Coordinator",
+      "verb": "review",
+      "target_entity": "Delivery Request",
+      "cardinality": "0..*",
+      "reason": "Fulfillment coordinators review submitted delivery requests as part of operations.",
+      "evidence": "Prompt: \"fulfillment coordinators can review delivery requests\""
+    },
+    {
+      "decision": "new",
+      "source_entity": "Delivery Request",
+      "verb": "be reviewed by",
+      "target_entity": "Fulfillment Coordinator",
+      "cardinality": "1",
+      "reason": "Once reviewed, a delivery request has one accountable reviewer.",
+      "evidence": "Spec review behavior derived from prompt: \"can review delivery requests\""
+    }
+  ],
+  "conflicts": [],
+  "warnings": []
+}

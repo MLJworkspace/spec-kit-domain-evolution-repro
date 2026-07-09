@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Simple Domain Model",
+  "type": "object",
+  "required": ["source_spec", "entities", "relationships", "warnings"],
+  "properties": {
+    "source_spec": { "type": "string" },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "attributes", "sources"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "attributes": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_entity", "verb", "target_entity", "cardinality", "sources"],
+        "properties": {
+          "source_entity": { "type": "string" },
+          "verb": { "type": "string" },
+          "target_entity": { "type": "string" },
+          "cardinality": { "type": "string" },
+          "sources": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

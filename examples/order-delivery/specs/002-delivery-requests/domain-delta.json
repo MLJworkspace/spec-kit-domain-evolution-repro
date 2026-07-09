@@ -1,0 +1,302 @@
+{
+  "delta_type": "feature_domain_delta",
+  "base_source_spec": "specs/001-order-management/spec.md",
+  "next_source_spec": "specs/002-delivery-requests/spec.md",
+  "rationale_source_spec": "specs/002-delivery-requests/spec.md",
+  "summary": {
+    "added_entity_count": 2,
+    "modified_entity_count": 0,
+    "added_attribute_count": 3,
+    "added_relationship_count": 5,
+    "modified_relationship_count": 0,
+    "retained_absent_entity_count": 2,
+    "retained_absent_relationship_count": 4
+  },
+  "entities": {
+    "added": [
+      {
+        "name": "Delivery Request",
+        "entity": {
+          "name": "Delivery Request",
+          "description": "A customer's request to deliver an existing **Order** to a `destination_address` on a `requested_delivery_date`; includes a review `status`.",
+          "attributes": [
+            "destination_address",
+            "requested_delivery_date",
+            "status"
+          ],
+          "sources": [
+            "FR-001",
+            "FR-002",
+            "FR-003",
+            "FR-004",
+            "FR-005",
+            "FR-006",
+            "FR-007",
+            "FR-008",
+            "FR-009",
+            "FR-010",
+            "FR-011",
+            "FR-012",
+            "FR-013",
+            "FR-014",
+            "Key Entities",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "existing_name": "",
+          "generated_name": "Delivery Request",
+          "prompt_term": "delivery requests",
+          "reason": "The prior model has no delivery request concept and the prompt adds it as a new order-related workflow item.",
+          "evidence": "Prompt: \"Add delivery requests\""
+        }
+      },
+      {
+        "name": "Fulfillment Coordinator",
+        "entity": {
+          "name": "Fulfillment Coordinator",
+          "description": "A fulfillment operations actor who reviews submitted **Delivery Request** instances and determines whether each request is approved or rejected.",
+          "attributes": [],
+          "sources": [
+            "FR-010",
+            "FR-011",
+            "FR-012",
+            "Key Entities",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "existing_name": "",
+          "generated_name": "Fulfillment Coordinator",
+          "prompt_term": "fulfillment coordinators",
+          "reason": "The prior model has no fulfillment review actor and the prompt names this role explicitly.",
+          "evidence": "Prompt: \"fulfillment coordinators can review delivery requests\""
+        }
+      }
+    ],
+    "reused": [
+      {
+        "name": "Customer",
+        "decision": "reused_with_modification",
+        "new_attributes": [],
+        "rationale": {
+          "decision": "reused_with_modification",
+          "existing_name": "Customer",
+          "generated_name": "Customer",
+          "prompt_term": "clients",
+          "reason": "The prior model uses Customer for the party that creates orders, matching the prompt's client role.",
+          "evidence": "Prompt: \"clients can request delivery\"; prior model: \"Customer ... creates **Order** instances\""
+        }
+      },
+      {
+        "name": "Order",
+        "decision": "reused",
+        "new_attributes": [],
+        "rationale": {
+          "decision": "reused",
+          "existing_name": "Order",
+          "generated_name": "Order",
+          "prompt_term": "order",
+          "reason": "The prompt explicitly extends existing orders with delivery requests.",
+          "evidence": "Prompt: \"existing order\"; prior model entity: \"Order\""
+        }
+      }
+    ],
+    "modified": [],
+    "retained_absent": [
+      "Order Item",
+      "Product"
+    ]
+  },
+  "attributes": {
+    "added": [
+      {
+        "entity": "Delivery Request",
+        "attribute": "destination_address",
+        "rationale": {
+          "decision": "new",
+          "entity": "Delivery Request",
+          "attribute": "destination_address",
+          "reason": "The prompt requires delivery requests to include a destination address.",
+          "evidence": "Prompt: \"delivery requests include a destination address\""
+        }
+      },
+      {
+        "entity": "Delivery Request",
+        "attribute": "requested_delivery_date",
+        "rationale": {
+          "decision": "new",
+          "entity": "Delivery Request",
+          "attribute": "requested_delivery_date",
+          "reason": "The prompt requires delivery requests to include a requested delivery date.",
+          "evidence": "Prompt: \"requested delivery date\""
+        }
+      },
+      {
+        "entity": "Delivery Request",
+        "attribute": "status",
+        "rationale": {
+          "decision": "new",
+          "entity": "Delivery Request",
+          "attribute": "status",
+          "reason": "A review workflow needs a business-visible state so submitted, approved, and rejected requests can be distinguished.",
+          "evidence": "Prompt: \"fulfillment coordinators can review delivery requests\""
+        }
+      }
+    ]
+  },
+  "relationships": {
+    "added": [
+      {
+        "relationship": {
+          "source_entity": "Customer",
+          "verb": "submit",
+          "target_entity": "Delivery Request",
+          "cardinality": "0..*",
+          "sources": [
+            "FR-005",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "source_entity": "Customer",
+          "verb": "submit",
+          "target_entity": "Delivery Request",
+          "cardinality": "0..*",
+          "reason": "Customers may request delivery across multiple orders over time.",
+          "evidence": "Prompt: \"clients can request delivery\""
+        }
+      },
+      {
+        "relationship": {
+          "source_entity": "Delivery Request",
+          "verb": "be reviewed by",
+          "target_entity": "Fulfillment Coordinator",
+          "cardinality": "1",
+          "sources": [
+            "FR-012",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "source_entity": "Delivery Request",
+          "verb": "be reviewed by",
+          "target_entity": "Fulfillment Coordinator",
+          "cardinality": "1",
+          "reason": "Once reviewed, a delivery request has one accountable reviewer.",
+          "evidence": "Spec review behavior derived from prompt: \"can review delivery requests\""
+        }
+      },
+      {
+        "relationship": {
+          "source_entity": "Delivery Request",
+          "verb": "belong to",
+          "target_entity": "Order",
+          "cardinality": "1",
+          "sources": [
+            "FR-002",
+            "FR-005",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "source_entity": "Delivery Request",
+          "verb": "belong to",
+          "target_entity": "Order",
+          "cardinality": "1",
+          "reason": "Every delivery request is for one existing order.",
+          "evidence": "Prompt: \"request delivery for an existing order\""
+        }
+      },
+      {
+        "relationship": {
+          "source_entity": "Fulfillment Coordinator",
+          "verb": "review",
+          "target_entity": "Delivery Request",
+          "cardinality": "0..*",
+          "sources": [
+            "FR-010",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "source_entity": "Fulfillment Coordinator",
+          "verb": "review",
+          "target_entity": "Delivery Request",
+          "cardinality": "0..*",
+          "reason": "Fulfillment coordinators review submitted delivery requests as part of operations.",
+          "evidence": "Prompt: \"fulfillment coordinators can review delivery requests\""
+        }
+      },
+      {
+        "relationship": {
+          "source_entity": "Order",
+          "verb": "be associated with",
+          "target_entity": "Delivery Request",
+          "cardinality": "0..1",
+          "sources": [
+            "FR-003",
+            "FR-014",
+            "delta:added"
+          ]
+        },
+        "rationale": {
+          "decision": "new",
+          "source_entity": "Order",
+          "verb": "be associated with",
+          "target_entity": "Delivery Request",
+          "cardinality": "0..1",
+          "reason": "The prompt limits each order to at most one delivery request.",
+          "evidence": "Prompt: \"each order can have zero or one delivery request\""
+        }
+      }
+    ],
+    "reused": [],
+    "modified": [],
+    "retained_absent": [
+      {
+        "source_entity": "Customer",
+        "verb": "create",
+        "target_entity": "Order",
+        "cardinality": "0..*",
+        "sources": [
+          "FR-003"
+        ]
+      },
+      {
+        "source_entity": "Order",
+        "verb": "belong to",
+        "target_entity": "Customer",
+        "cardinality": "1",
+        "sources": [
+          "FR-002"
+        ]
+      },
+      {
+        "source_entity": "Order",
+        "verb": "contain",
+        "target_entity": "Order Item",
+        "cardinality": "1..*",
+        "sources": [
+          "FR-004"
+        ]
+      },
+      {
+        "source_entity": "Order Item",
+        "verb": "reference",
+        "target_entity": "Product",
+        "cardinality": "1",
+        "sources": [
+          "FR-005"
+        ]
+      }
+    ]
+  },
+  "warnings": []
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Domain Context Rationale",
+  "type": "object",
+  "required": [
+    "source_spec",
+    "input_domain_model",
+    "summary",
+    "entity_decisions",
+    "attribute_decisions",
+    "relationship_decisions",
+    "conflicts",
+    "warnings"
+  ],
+  "properties": {
+    "source_spec": { "type": "string" },
+    "input_domain_model": { "type": "string" },
+    "summary": { "type": "string" },
+    "entity_decisions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/decision" }
+    },
+    "attribute_decisions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/attributeDecision" }
+    },
+    "relationship_decisions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationshipDecision" }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "existing_fact", "requested_fact", "resolution", "evidence"],
+        "properties": {
+          "kind": { "type": "string" },
+          "existing_fact": { "type": "string" },
+          "requested_fact": { "type": "string" },
+          "resolution": { "enum": ["clarification_required", "explicit_evolution", "no_conflict"] },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "decision": {
+      "type": "object",
+      "required": ["decision", "existing_name", "generated_name", "prompt_term", "reason", "evidence"],
+      "properties": {
+        "decision": { "enum": ["reused", "reused_with_modification", "new"] },
+        "existing_name": { "type": "string" },
+        "generated_name": { "type": "string" },
+        "prompt_term": { "type": "string" },
+        "reason": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "attributeDecision": {
+      "type": "object",
+      "required": ["decision", "entity", "attribute", "reason", "evidence"],
+      "properties": {
+        "decision": { "enum": ["reused", "reused_with_modification", "new"] },
+        "entity": { "type": "string" },
+        "attribute": { "type": "string" },
+        "reason": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "relationshipDecision": {
+      "type": "object",
+      "required": [
+        "decision",
+        "source_entity",
+        "verb",
+        "target_entity",
+        "cardinality",
+        "reason",
+        "evidence"
+      ],
+      "properties": {
+        "decision": { "enum": ["reused", "reused_with_modification", "new", "changed"] },
+        "source_entity": { "type": "string" },
+        "verb": { "type": "string" },
+        "target_entity": { "type": "string" },
+        "cardinality": { "type": "string" },
+        "reason": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

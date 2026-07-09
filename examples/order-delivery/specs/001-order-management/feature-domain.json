@@ -1,0 +1,114 @@
+{
+  "source_spec": "specs/001-order-management/spec.md",
+  "entities": [
+    {
+      "name": "Customer",
+      "description": "A person or account that creates **Order** instances; includes `name` and `contact_information`.",
+      "attributes": [
+        "name",
+        "contact_information"
+      ],
+      "sources": [
+        "Key Entities",
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-006"
+      ]
+    },
+    {
+      "name": "Order",
+      "description": "A customer purchase request that belongs to exactly one **Customer** and contains one or more instances of **Order Item**; includes `status`, `created_at`, and `total_amount`.",
+      "attributes": [
+        "status",
+        "created_at",
+        "total_amount",
+        "line_total"
+      ],
+      "sources": [
+        "Key Entities",
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-007",
+        "FR-010",
+        "FR-014"
+      ]
+    },
+    {
+      "name": "Order Item",
+      "description": "A line in an **Order** representing a requested **Product** and purchase quantity; includes `quantity`, `unit_price`, and `line_total`.",
+      "attributes": [
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "sources": [
+        "Key Entities",
+        "FR-004",
+        "FR-005",
+        "FR-008",
+        "FR-010",
+        "FR-011",
+        "FR-012",
+        "FR-013",
+        "FR-014"
+      ]
+    },
+    {
+      "name": "Product",
+      "description": "An item that can be referenced by an **Order Item**; includes `name`, `price`, and `availability_status`.",
+      "attributes": [
+        "name",
+        "price",
+        "availability_status"
+      ],
+      "sources": [
+        "Key Entities",
+        "FR-005",
+        "FR-009",
+        "FR-012"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "source_entity": "Customer",
+      "verb": "create",
+      "target_entity": "Order",
+      "cardinality": "0..*",
+      "sources": [
+        "FR-003"
+      ]
+    },
+    {
+      "source_entity": "Order",
+      "verb": "belong to",
+      "target_entity": "Customer",
+      "cardinality": "1",
+      "sources": [
+        "FR-002"
+      ]
+    },
+    {
+      "source_entity": "Order",
+      "verb": "contain",
+      "target_entity": "Order Item",
+      "cardinality": "1..*",
+      "sources": [
+        "FR-004"
+      ]
+    },
+    {
+      "source_entity": "Order Item",
+      "verb": "reference",
+      "target_entity": "Product",
+      "cardinality": "1",
+      "sources": [
+        "FR-005"
+      ]
+    }
+  ],
+  "warnings": []
+}
